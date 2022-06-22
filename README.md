@@ -1,7 +1,18 @@
 # vue_manage
-
+来自B站黑马程序员
 #### 配置环境 `npm install`
 #### 启动项目 `npm run serve`
+#### 文件说明  
+- `assets` 本地资源    
+- `components` 项目组件    
+- `pages`主要页面组件   
+  - `user` 用户管理组件
+  - `power` 权限管理组件
+- `plugins` 按需导入配置elementui
+- `router` 路由配置
+- `App.vue` 应用组件 
+- `mian.js` 项目入口文件  
+- `package.json` 项目配置文件  
 ---
 ### 后台服务器（先将mydb.sql导入本地数据库）
 #### 配置环境 `npm install`
@@ -27,4 +38,6 @@
 - `app.js` 主项目入口文件
 - `package.json` 项目配置文件
 ---
-> 6.20 登录功能
+> 6.20 登录功能  
+> 6.21 用户列表大部分功能  
+> 6.22 权限管理功能

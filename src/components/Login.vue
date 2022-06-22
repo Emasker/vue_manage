@@ -78,12 +78,9 @@ export default {
         //请求接口验证
         const { data: res } = await this.$http.post('login', this.loginForm)
         if (res.meta.status !== 200) {
-          this.$message.error('登陆失败')
+          this.$message.error(res.meta.msg)
         } else {
-          this.$message({
-            message: '登录成功',
-            type: 'success',
-          })
+          this.$message.success(res.meta.msg)
           //保存登录token
           window.sessionStorage.setItem('token', res.data.token)
           this.$router.push('/home')
