@@ -17,7 +17,9 @@ axios.interceptors.request.use(config => {
 }, error => {
   return Promise.reject(error);
 });
-
+//引入树状表格
+import ZkTable from 'vue-table-with-tree-grid'
+Vue.component('tree-table', ZkTable)
 //挂载全局axios
 Vue.prototype.$http = axios
 Vue.config.productionTip = false

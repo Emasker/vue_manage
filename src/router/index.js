@@ -28,6 +28,9 @@ const router = new Router({
       },{
         path:"/roles",
         component:()=>import("@/pages/power/Roles.vue")
+      },{
+        path:'/categories',
+        component:()=>import("@/pages/goods/Categories.vue")
       }]
     }
   ]
