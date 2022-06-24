@@ -46,25 +46,41 @@
         </template>
         <!-- 操作 -->
         <template slot="option" slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini"
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            size="mini"
+            @click="showEditDialog(scope.row.cat_id)"
             >编辑
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini"
-            >删除
-          </el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            size="mini"
+            @click="removeCate(scope.row.cat_id)"
+            >删除</el-button
+          >
         </template>
       </tree-table>
       <!-- 分页 -->
       <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
         :page-size="queryInfo.pagesize"
-        layout="total, prev, pager, next, jumper"
+        :page-sizes="[5, 7, 10, 15]"
+        layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       >
       </el-pagination>
     </el-card>
     <!-- 添加分类框 -->
-    <el-dialog title="添加分类" :visible.sync="addCatDialogVisible" width="50%">
+    <el-dialog
+      title="添加分类"
+      :visible.sync="addCatDialogVisible"
+      width="50%"
+      @close="addCateDialogClosed"
+    >
       <el-form
         :model="addCatForm"
         :rules="addCatrules"
@@ -74,13 +90,47 @@
         <el-form-item label="分类名称：" prop="cat_name">
           <el-input v-model="addCatForm.cat_name"></el-input>
         </el-form-item>
-        <el-form-item label="父级别分类："> </el-form-item>
+        <el-form-item label="父级分类：">
+          <!-- options 用来指定数据源 -->
+          <!-- props 用来指定配置对象 -->
+          <el-cascader
+            v-model="selectedOptions"
+            :options="parentCateList"
+            @change="CateChange"
+            :props="{
+              expandTrigger: 'hover',
+              checkStrictly: true,
+              ...cascaderProps,
+            }"
+            clearable
+          ></el-cascader>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCatDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCatDialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="addCate">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑分类 -->
+    <el-dialog
+      title="修改分类"
+      :visible.sync="editCateDialogVisbel"
+      width="50%"
+      @close="editDialogClosed"
+    >
+      <el-form
+        :model="editCate"
+        :rules="editCateRules"
+        ref="editCateRef"
+        label-width="100px"
+      >
+        <el-form-item label="分类名称" prop="cat_name">
+          <el-input v-model="editCate.cat_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editCateDialogVisbel = false">取 消</el-button>
+        <el-button type="primary" @click="editCateInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -134,8 +184,23 @@ export default {
         cat_name: [
           { required: true, message: '请输入类别名称', trigger: 'blur' },
         ],
-      },  
-      parentCateList: [],// 父级分类的列表
+      },
+      parentCateList: [], // 父级分类的列表
+      //级联选择器配置对象
+      cascaderProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children',
+      },
+      //选中的父级分类id
+      selectedOptions: [],
+      editCateDialogVisbel: false, //编辑对话框的显示
+      editCate: {}, //编辑的数据
+      editCateRules: {
+        cat_name: [
+          { required: true, message: '请输入要修改的信息', trigger: 'blur' },
+        ],
+      },
     }
   },
   created() {
@@ -158,16 +223,115 @@ export default {
       this.addCatDialogVisible = true
       this.getParentCateList()
     },
+    //监听pagesize改边
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getCateList()
+    },
+    //监听pagenum改变
+    handleCurrentChange(newPage) {
+      this.queryInfo.pagenum = newPage
+      this.getCateList()
+    },
     //获取父级分类列表
     async getParentCateList() {
       const { data: res } = await this.$http.get('categories', {
         params: { type: 2 },
       })
-      if(res.meta.status!==200){
+      if (res.meta.status !== 200) {
         return this.$message.error(res.meta.msg)
       }
-      this. parentCateList=res.data
-      console.log(res);
+      this.parentCateList = res.data
+    },
+    //监听选择项改变
+    CateChange() {
+      if (this.selectedOptions.length > 0) {
+        this.addCatForm.cat_pid =
+          this.selectedOptions[this.selectedOptions.length - 1]
+        this.addCatForm.cat_level = this.selectedOptions.length
+        return
+      } else {
+        this.addCatForm.cat_pid = 0
+        this.addCatForm.cat_level = 0
+      }
+    },
+    // 点击按钮添加新的分类
+    async addCate() {
+      this.$refs.addCatRef.validate(async (valid) => {
+        if (!valid) return
+        const { data: res } = await this.$http.post(
+          'categories',
+          this.addCatForm
+        )
+        if (res.meta.status !== 201) {
+          return this.$message.error(res.meta.msg)
+        }
+        this.$message.success(res.meta.msg)
+        this.getCateList()
+        this.addCatDialogVisible = false
+      })
+    },
+    //添加对话框关闭
+    addCateDialogClosed() {
+      this.$refs.addCatRef.resetFields()
+      this.selectedOptions = []
+      this.addCatForm.cat_pid = 0
+      this.addCatForm.cat_level = 0
+    },
+    //点击编辑按钮
+    async showEditDialog(id) {
+      const { data: res } = await this.$http.get('categories/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.msg)
+      }
+      this.editCate = res.data
+      this.editCateDialogVisbel = true
+    },
+    //提交编辑信息
+    editCateInfo() {
+      this.$refs.editCateRef.validate(async (valid) => {
+        if (!valid) {
+          return this.$message.error('表单不完善')
+        } else {
+          const { data: res } = await this.$http.put(
+            'categories/' + this.editCate.cat_id,
+            { cat_name: this.editCate.cat_name }
+          )
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg)
+          } else {
+            this.$message.success(res.meta.msg)
+            this.editCateDialogVisbel = false
+            this.getCateList()
+          }
+        }
+      })
+    },
+    //关闭修改表单清空数据
+    editDialogClosed() {
+      this.editCateId = 0
+      this.editCate = {}
+    },
+    //删除分类
+    async removeCate(id) {
+      await this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async () => {
+          const { data: res } = await this.$http.delete('categories/' + id)
+
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg)
+          } else {
+            this.$message.success(res.meta.msg)
+            this.getCateList()
+          }
+        })
+        .catch(() => {
+          this.$message.info('已取消删除')
+        })
     },
   },
 }
@@ -176,5 +340,8 @@ export default {
 <style lang="less" scoped>
 .zk-table {
   margin-top: 15px;
+}
+.el-cascader {
+  width: 100%;
 }
 </style>

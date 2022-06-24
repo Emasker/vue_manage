@@ -272,10 +272,7 @@ export default {
       this.editForm = res.data
       this.editDialogVisible = true
     },
-    //关闭修改表单清空数据
-    editDialogClosed() {
-      this.$refs.editFormRef.resetFields()
-    },
+ 
     //修改后提交
     editRolesInfo() {
       this.$refs.editFormRef.validate(async (valid) => {
