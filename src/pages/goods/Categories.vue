@@ -87,9 +87,6 @@
         ref="addCatRef"
         label-width="100px"
       >
-        <el-form-item label="分类名称：" prop="cat_name">
-          <el-input v-model="addCatForm.cat_name"></el-input>
-        </el-form-item>
         <el-form-item label="父级分类：">
           <!-- options 用来指定数据源 -->
           <!-- props 用来指定配置对象 -->
@@ -104,6 +101,9 @@
             }"
             clearable
           ></el-cascader>
+        </el-form-item>
+        <el-form-item label="分类名称：" prop="cat_name">
+          <el-input v-model="addCatForm.cat_name"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
