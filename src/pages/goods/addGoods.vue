@@ -49,13 +49,13 @@
               <el-input v-model="addForm.goods_name"></el-input>
             </el-form-item>
             <el-form-item label="商品价格" prop="goods_price">
-              <el-input v-model="addForm.goods_price"></el-input>
+              <el-input v-model="this.addprice"></el-input>
             </el-form-item>
             <el-form-item label="商品重量" prop="goods_weight">
-              <el-input v-model="addForm.goods_weight"></el-input>
+              <el-input v-model="this.addweight"></el-input>
             </el-form-item>
             <el-form-item label="商品数量" prop="goods_number">
-              <el-input v-model="addForm.goods_number" type="number"></el-input>
+              <el-input v-model="this.addnumber" type="number"></el-input>
             </el-form-item>
             <el-form-item label="商品分类" prop="goods_cat">
               <el-cascader
@@ -69,6 +69,7 @@
               >
               </el-cascader>
             </el-form-item>
+          
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">
             <el-form-item
@@ -85,6 +86,7 @@
                 ></el-checkbox>
               </el-checkbox-group>
             </el-form-item>
+           
           </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">
             <el-form-item
@@ -93,7 +95,7 @@
               :key="item.attr_id"
             >
               <el-input v-model="item.attr_vals"></el-input>
-            </el-form-item>
+            </el-form-item>          
           </el-tab-pane>
           <el-tab-pane label="商品图片" name="3">
             <el-upload
@@ -139,7 +141,7 @@ export default {
         goods_name: '',
         goods_price: 0,
         goods_weight: 0,
-        goods_number: 1,
+        goods_number: 0,
         // 商品所属的分类数组
         goods_cat: [],
         pics: [], //图片路径的数组
@@ -325,6 +327,15 @@ export default {
       }
       return null
     },
+    addprice(){
+      return this.addForm.goods_price===0?' ':this.addForm.goods_price
+    },
+    addweight(){
+     return this.addForm.goods_weight===0?' ':this.addForm.goods_weight
+    },
+     addnumber(){
+     return this.addForm.goods_number===0?' ':this.addForm.goods_number
+    }
   },
 }
 </script>
@@ -348,4 +359,5 @@ export default {
   float: right;
   margin-right: 15%;
 }
+
 </style>

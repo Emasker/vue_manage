@@ -101,14 +101,6 @@
       width="50%"
       @close="editDialogClosed"
     >
-      <el-alert
-        title="此处接口错误，功能失效"
-        type="error"
-        center
-        show-icon
-        :closable="false"
-      >
-      </el-alert>
       <el-form
         :model="editGood"
         :rules="editGoodRules"
@@ -210,8 +202,10 @@ export default {
     },
     //编辑商品
     async showEditDialog(id) {
+  
       const { data: res } = await this.$http.get('goods/' + id)
       if (res.meta.status !== 200) {
+      
         return this.$message.error(res.meta.msg)
       }
       this.editGood = res.data
@@ -228,19 +222,21 @@ export default {
           return this.$message.error('表单不完善')
         } else {
           const { data: res } = await this.$http.put(
-            'goods/' + this.editGood.goods_id,
+            `goods/ ${this.editGood.goods_id}`,
             {
               goods_name: this.editGood.goods_name,
               goods_price: this.editGood.goods_price,
               goods_number: this.editGood.goods_number,
               goods_weight: this.editGood.goods_weight,
+              goods_cat:this.editGood.goods_cat
             }
           )
           if (res.meta.status !== 200) {
+
             return this.$message.error(res.meta.msg)
           } else {
             this.$message.success(res.meta.msg)
-            this.editGoodDialogVisbel = false
+            this.editDialogVisbel = false
             this.getGoodsList()
           }
         }
