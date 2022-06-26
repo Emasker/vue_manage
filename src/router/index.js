@@ -34,6 +34,12 @@ const router = new Router({
       },{
         path:'/params',
         component:()=>import("@/pages/goods/Params.vue")
+      },{
+        path:'/goods',
+        component:()=>import("@/pages/goods/GoodsList.vue"),
+      },{
+        path:'/goods/add',
+        component:()=>import("@/pages/goods/addGoods.vue")
       }]
     }
   ]

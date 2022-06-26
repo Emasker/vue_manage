@@ -718,6 +718,8 @@ sp_role
 
 ## 1.6. 商品分类管理
 
+sp_category
+
 ### 1.6.1. 商品分类数据列表
 
 - 请求路径：categories
@@ -892,6 +894,8 @@ sp_role
 
 ## 1.7. 分类参数管理
 
+sp_goods_attr
+
 ### 1.7.1. 参数列表
 
 - 请求路径：categories/:id/attributes
@@ -1056,6 +1060,8 @@ sp_role
 ```
 
 ## 1.8. 商品管理
+
+sp_goods
 
 ### 1.8.1. 商品列表数据
 
