@@ -8,6 +8,9 @@
 - `pages`Home页面组件   
   - `user` 用户管理组件
   - `power` 权限管理组件
+  - `good`商品管理
+  - `order`订单列表
+  - `report`数据报表
 - `plugins` 按需导入配置elementui
 - `router` 路由配置
 - `App.vue` 应用组件 
