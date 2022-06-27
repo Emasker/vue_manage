@@ -158,7 +158,6 @@
       title="分配权限"
       :visible.sync="setDialogVisible"
       width="50%"
-      @close="setDialogClosed"
     >
       <el-input placeholder="输入关键字进行过滤" v-model="filterText">
       </el-input>
@@ -371,7 +370,7 @@ export default {
       })
     },
     //关闭对话框后清空已有节点
-    setDialogClosed() {
+    editDialogClosed() {
       this.defKeys = []
     },
     //点击确定后保存树中勾选的节点

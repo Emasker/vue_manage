@@ -14,7 +14,7 @@ const router = new Router({
     },
     {
       path: '/home',
-      component: () => import("@/components/Home.vue"),
+      component: () => import("@/pages/Home.vue"),
       redirect: '/welcome',
       children: [{
         path: '/welcome',
@@ -40,6 +40,12 @@ const router = new Router({
       },{
         path:'/goods/add',
         component:()=>import("@/pages/goods/addGoods.vue")
+      },{
+        path:'/orders',
+       component:()=>import("@/pages/order/Order.vue")
+      },{
+        path:'/reports',
+        component:()=>import("@/pages/report/Graph.vue")
       }]
     }
   ]

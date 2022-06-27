@@ -37,11 +37,16 @@
           width="102"
         ></el-table-column>
         <el-table-column
-          prop="goods_number"
+          prop="goods_weight"
           label="商品重量"
           width="80"
         ></el-table-column>
-        <el-table-column prop="add_time" label="上架时间" width="160">
+        <el-table-column
+          prop="goods_number"
+          label="商品数量"
+          width="80"
+        ></el-table-column>
+        <el-table-column prop="add_time" label="更新时间" width="160">
           <template slot-scope="scope">
             {{ scope.row.add_time | dateFormat }}
           </template>
@@ -202,10 +207,8 @@ export default {
     },
     //编辑商品
     async showEditDialog(id) {
-  
       const { data: res } = await this.$http.get('goods/' + id)
       if (res.meta.status !== 200) {
-      
         return this.$message.error(res.meta.msg)
       }
       this.editGood = res.data
@@ -228,11 +231,10 @@ export default {
               goods_price: this.editGood.goods_price,
               goods_number: this.editGood.goods_number,
               goods_weight: this.editGood.goods_weight,
-              goods_cat:this.editGood.goods_cat
+              goods_cat: this.editGood.goods_cat,
             }
           )
           if (res.meta.status !== 200) {
-
             return this.$message.error(res.meta.msg)
           } else {
             this.$message.success(res.meta.msg)

@@ -33,9 +33,6 @@ body,
 .el-upload-list {
   width: 30%;
 }
-.el-dialog__body {
-  text-align: center;
-}
 .ql-editor{
   min-height: 300px;
 }

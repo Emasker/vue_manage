@@ -898,6 +898,8 @@ sp_goods_attr
 
 ### 1.7.1. 参数列表
 
+sp_attribute
+
 - 请求路径：categories/:id/attributes
 - 请求方法：get
 - 请求参数
@@ -1679,6 +1681,8 @@ brew install GraphicsMagick
 ```
 
 ## 1.10. 订单管理
+
+sp_order
 
 ### 1.10.1. 订单数据列表
 
